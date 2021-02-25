@@ -10,13 +10,13 @@ public class BroadCast {
 
 
     public synchronized void sendMessage(String fromOut, ChatThread thread) {
-        System.out.println(fromOut);
+        System.out.println(thread.getName()+": "+fromOut);
         for (ChatThread threads:clients) {
+
             if (threads.equals(thread)) {
                 continue;
-           }
-            threads.message(fromOut + "\n");
-
+            }
+            threads.message(thread.getName() + ": " + fromOut + "\n");
         }
     }
 
@@ -25,4 +25,30 @@ public class BroadCast {
     }
 
 
+    public boolean privateMessage(String name, String message,ChatThread thread) {
+        for (ChatThread threads:clients) {
+            if (threads.getName().equals(name)) {
+                System.out.println(message);
+                threads.message("From "+thread.getName()+": "+message + "\n");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean kick(String name, ChatThread thread) {
+        for (ChatThread threads:clients) {
+            if (threads.getName().equals(name)) {
+                sendMessage("Kicked "+name+" from server!",thread);
+                threads.close();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public synchronized void remove(ChatThread thread) {
+
+        clients.remove(thread);
+    }
 }

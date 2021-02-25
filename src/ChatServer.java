@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 public class ChatServer {
 
     private ServerSocket serverSocket = null;
+    private  int threadNumber =10;
 
     public ChatServer(int portNumber) {
         try {
@@ -20,11 +21,14 @@ public class ChatServer {
 
     public void start() {
         // Allocate a Pool of 4 fixed threads
-        ExecutorService fixedPool = Executors.newFixedThreadPool(2);
+        ExecutorService fixedPool = Executors.newFixedThreadPool(threadNumber);
         BroadCast broadCast= new BroadCast();
         int number=-1;
 // submit 10 tasks to be executed
         while (serverSocket.isBound()){
+            if (number == threadNumber -1) {
+                number = -1;
+            }
 
             try {
                 Socket clientSocket = serverSocket.accept();
